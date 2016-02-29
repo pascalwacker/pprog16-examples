@@ -26,7 +26,7 @@ public class Hangman {
 	int turn;
 	int lives;
 	int charFound;
-	boolean finished;
+	//boolean finished;
 	private Scanner in;
 	
 	// -- constructor
@@ -34,7 +34,6 @@ public class Hangman {
 		this.lives = 5;
 		this.turn = 0; // would be default
 		this.charFound = 0; // would be default
-		this.finished = false; // would be default
 		
 		// get the lenght of the input word
 		this.wordLength = word.length();
@@ -58,6 +57,10 @@ public class Hangman {
 		for (int i=0; i<this.wordLength; i++) {
 			// uppercase all characters
 			this.word[i] = Character.toUpperCase(this.word[i]);
+			int checkChar = this.charToInt(this.word[i]);
+			if (checkChar < 0 || checkChar > 25) {
+				throw new IllegalArgumentException("Es sind nur die Zeichen von A bis Z sind erlaubt, unabhängig der Gross/Kleinschreibung, \"" + String.copyValueOf(this.word) + "\" gegeben. Ungültiges Zeichen: \"" + this.word[i] + "\"");
+			}
 			// fill our helper array with `-`
 			this.guessed[i] = '-';
 		}
@@ -75,12 +78,12 @@ public class Hangman {
 		System.out.println(this.guessed);
 		
 		// while there are lives left and the game isn't won yet do ...
-		while (!this.finished && this.lives > 0) {
+		while (this.charFound < this.wordLength && this.lives > 0) {
 			// tell user to input something
 			System.out.println((this.turn <= 0 ? "Bitte ersten Buchstaben eingeben:" : "Bitte nächsten Buchstaben eingeben:"));
 			
 			// read only one character as upper case
-			char input = Character.toUpperCase(this.in.next(".").charAt(0)); // there's an exception if it's not okay.
+			char input = Character.toUpperCase(this.in.next().charAt(0)); // there's an exception if it's not okay.
 			// int representation of the char (0 for A to 25 for Z)
 			int intOfInput = this.charToInt(input);
 			
@@ -105,9 +108,9 @@ public class Hangman {
 
 					// check if we're done
 					// if (Arrays.equals(this.word, this.guessed)) {
-					if (this.charFound == this.wordLength) { // I guess, this should be better, regarding resources, since it hasn't to loop through 2 arrays!
-						this.finished = true;
-					}
+						//this.finished = true;
+					//}
+					// moved to the while loop
 				} else {
 					// update turn
 					this.turn++;
